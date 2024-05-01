@@ -57,7 +57,8 @@ pub type Aes256Ccm<TagSize> = AesCcm<aes::Aes256, TagSize>;
 /// as tag sizes.
 pub struct AesCcm<Aes, TagSize>
 where
-    Aes: BlockCipher<BlockSize = U16>,
+    Aes: BlockCipher,
+    Aes::BlockSize: ArrayLength<U16>,
     Aes::ParBlocks: ArrayLength<Block<Aes>>,
     TagSize: CcmTagSize,
 {
@@ -70,7 +71,8 @@ where
 
 impl<Aes, TagSize> NewAead for AesCcm<Aes, TagSize>
 where
-    Aes: BlockCipher<BlockSize = U16> + NewBlockCipher,
+    Aes: BlockCipher + NewBlockCipher,
+    Aes::BlockSize: ArrayLength<U16>,
     Aes::ParBlocks: ArrayLength<Block<Aes>>,
     TagSize: CcmTagSize,
 {
@@ -87,7 +89,8 @@ where
 
 impl<Aes, TagSize> AeadInPlace for AesCcm<Aes, TagSize>
 where
-    Aes: BlockCipher<BlockSize = U16>,
+    Aes: BlockCipher,
+    Aes::BlockSize: ArrayLength<U16>,
     Aes::ParBlocks: ArrayLength<Block<Aes>>,
     TagSize: CcmTagSize,
 {
@@ -254,7 +257,8 @@ where
 /// Variation of CBC-MAC mode used in CCM.
 fn ccm_cbc_mac<Aes>(t: &mut [u8; 16], data: &[u8], flag: bool, cipher: &Aes)
 where
-    Aes: BlockCipher<BlockSize = U16>,
+    Aes: BlockCipher,
+    Aes::BlockSize: ArrayLength<U16>,
     Aes::ParBlocks: ArrayLength<Block<Aes>>,
 {
     let mut dlen = data.len();
@@ -286,7 +290,8 @@ where
 /// 2 bytes of the nonce.
 fn ccm_ctr_mode<Aes>(payload: &mut [u8], ctr: &mut [u8], cipher: &Aes)
 where
-    Aes: BlockCipher<BlockSize = U16>,
+    Aes: BlockCipher,
+    Aes::BlockSize: ArrayLength<U16>,
     Aes::ParBlocks: ArrayLength<Block<Aes>>,
 {
     let plen = payload.len();
